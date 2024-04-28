@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
  */
 @AllArgsConstructor
 public enum UserErrorCode implements Error{
-    USER_NOT_FOUND(400, 1404, "사용자를 찾을 수 없"),
+    USER_NOT_FOUND(400, 1404, "사용자를 찾을 수 없다."),
     ;
 
     private final Integer httpStatusCode;
