@@ -8,7 +8,7 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @Getter
-public enum UserErrorCode implements ErrorCodeIfs {
+public enum CustomerErrorCode implements ErrorCodeIfs {
     USER_NOT_FOUND(400, 1404, "사용자를 찾을 수 없다."),
     ;
 
