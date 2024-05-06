@@ -22,7 +22,7 @@ import java.util.Optional;
 public class CustomerService {
     private final CustomerRepository customerRepository;
 
-    public CustomerEntity register(CustomerEntity customerEntity){
+    public CustomerEntity register(CustomerEntity customerEntity) {
         return Optional.ofNullable(customerEntity)
                 .map(it -> {
                     customerEntity.setStatus(CustomerStatus.REGISTERED);
@@ -35,19 +35,26 @@ public class CustomerService {
     public CustomerEntity login(
             String email,
             String password
-    ){
-         return getCustomerWithThrow(email, password);
+    ) {
+        return getCustomerWithThrow(email, password);
     }
 
     public CustomerEntity getCustomerWithThrow(
             String email,
             String password
-    ){
+    ) {
         return customerRepository.findFirstByEmailAndPasswordAndStatusOrderByIdDesc(
                 email,
                 password,
                 CustomerStatus.REGISTERED
         ).orElseThrow(() -> new ApiException(CustomerErrorCode.USER_NOT_FOUND));
 
+    }
+
+    public CustomerEntity getCustomerWithThrow(Long customerId) {
+        return customerRepository.findFirstByIdAndStatusOrderByIdDesc(
+                customerId,
+                CustomerStatus.REGISTERED
+        ).orElseThrow(() -> new ApiException(CustomerErrorCode.USER_NOT_FOUND));
     }
 }
