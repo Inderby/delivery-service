@@ -2,15 +2,13 @@ package org.delivery.api.domain.user.business;
 
 import lombok.RequiredArgsConstructor;
 import org.delivery.api.common.annotation.Business;
-import org.delivery.api.common.error.ErrorCode;
-import org.delivery.api.common.exception.ApiException;
+import org.delivery.api.domain.token.business.TokenBusiness;
+import org.delivery.api.domain.token.controller.model.TokenResponse;
 import org.delivery.api.domain.user.controller.model.CustomerLoginRequest;
 import org.delivery.api.domain.user.controller.model.CustomerRegisterRequest;
 import org.delivery.api.domain.user.controller.model.CustomerResponse;
 import org.delivery.api.domain.user.converter.CustomerConverter;
 import org.delivery.api.domain.user.service.CustomerService;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Business
@@ -18,6 +16,7 @@ public class CustomerBusiness {
     private final CustomerService customerService;
     private final CustomerConverter customerConverter;
 
+    private final TokenBusiness tokenBusiness;
     /**
      * 사용자에 대한 가입처리 로직
      * 1. request -> entity
@@ -47,11 +46,18 @@ public class CustomerBusiness {
      * @param request
      * @return
      */
-    public CustomerResponse login(CustomerLoginRequest request) {
+    public TokenResponse login(CustomerLoginRequest request) {
         var customerEntity = customerService.login(request.getEmail(), request.getPassword());
         //사용자가 없으면 throw
 
         // TODO : 사용자가 있다면 token 생성 구현 필요
-        return customerConverter.toResponse(customerEntity);
+        var tokenResponse = tokenBusiness.issueToken(customerEntity);
+        return tokenResponse;
+    }
+
+    public CustomerResponse me(Long customerId) {
+        var customerEntity = customerService.getCustomerWithThrow(customerId);
+        var response = customerConverter.toResponse(customerEntity);
+        return response;
     }
 }
