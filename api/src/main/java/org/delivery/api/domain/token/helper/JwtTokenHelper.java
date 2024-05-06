@@ -39,8 +39,8 @@ public class JwtTokenHelper implements TokenHelperIfs {
         var key = Keys.hmacShaKeyFor(secretKey.getBytes());
 
         var jwtToken = Jwts.builder()
-                .signWith(key, SignatureAlgorithm.HS256)
-                .setClaims(data)
+                .signWith(key, Jwts.SIG.HS256)
+                .claims().add(data).and()
                 .expiration(expiredAt)
                 .compact();
 
